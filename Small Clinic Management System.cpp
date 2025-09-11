@@ -106,13 +106,18 @@ class Doctor
         schedule.push_back(sch);
         cout <<" Schedule added." << endl;
     }
-    void displaySchedule()
+    void displaySchedule() // Displays the doctor's schedule
     {
         cout << "Schedule of Dr. " << name << endl;
         for (int i=0; i<schedule.size();i++)
         {
             cout <<schedule[i]<<endl;
         }
+    }
+    void cancelAppointment(Appointment app) // Cancels an appointment
+    {
+        app.setStatus("Cancelled");
+        cout << "Appointment on " << app.getDate() << " at " << app.getTime() << " with Dr. " << name << " has been cancelled." << endl;
     }
     void displayInfo() {
         cout << "Doctor Name: " << name << endl;
@@ -121,16 +126,56 @@ class Doctor
         displaySchedule();
     }
 
+
+};
+
+class chronic : public Patient
+{
+    private :
+    string condition;
+    public :
+    chronic (string n, string id, string a, vector <string> mh, string c)
+    {
+        setName(n);
+        setID(id);
+        setAge(stoi(a));
+        addMedicalHistory(c);
+        condition = c;
+    }
+    void setCondition(string c) {condition=c;}
+    string getCondition() {return condition;}
+    void addChronicCondition(string c)
+    {
+        condition = c;
+        cout <<" Chronic condition added." << endl;
+    }
+    void lastCheckupDate(string d)
+    {
+        cout << "Last checkup date: " << d << endl;
+    }
+    
+
+
+
+    void displayChronicInfo()
+    {
+        displayInfo();
+        cout << "Chronic Condition: " << condition << endl;
+    }
 };
 int main()
 {
-    Doctor doc1("Alice Smith", "Cardiology", "D001", {"9:00 AM - 12:00 PM", "1:00 PM - 5:00 PM"});
-    Patient pat1("John Doe", "P001", 30, {"Diabetes", "Hypertension"});
-    doc1.displayInfo(); 
-    doc1.addSchedule("6:00 PM - 8:00 PM");
-    doc1.displaySchedule();
-    pat1.addMedicalHistory("Asthma");
-    pat1.displayInfo();
-    pat1.scheduleAppointment("2024-07-15", "10:00 AM", doc1.getName(), "Regular Checkup", "Scheduled");
+    vector<string> mh = {"Diabetes", "Hypertension"};
+    chronic patient1("John Doe", "P001", "45", mh, "Diabetes");
+    patient1.displayChronicInfo();
+    patient1.lastCheckupDate("2024-06-15");
+
+    vector<string> sch = {"09:00 AM - 10:00 AM", "10:00 AM - 11:00 AM"};
+    Doctor doctor1("Dr. Smith", "Cardiology", "D001", sch);
+    doctor1.displayInfo();
+
+    patient1.scheduleAppointment("2024-07-01", "09:00 AM", doctor1.getName(), "Regular Checkup", "Scheduled");
+
     return 0;
+
 }
