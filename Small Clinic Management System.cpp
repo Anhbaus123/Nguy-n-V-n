@@ -3,245 +3,224 @@
 #include <string>
 using namespace std;
 
-// -------------------- CLASS Appointment --------------------
-// Quản lý thông tin lịch hẹn giữa bệnh nhân và bác sĩ
-class Appointment {
-private:
-    string date;        // Ngày hẹn
-    string time;        // Giờ hẹn
-    string doctorName;  // Tên bác sĩ
-    string patientName; // Tên bệnh nhân
-    string reason;      // Lý do khám
-    string status;      // Trạng thái (Scheduled, Completed, Cancelled)
+vector <string> Appointments;
 
-public:
-    // Constructor
-    Appointment(string d, string t, string dn, string pn, string rs, string st)
+class Appointment 
+{
+    private:
+    string time;
+    string date;
+    string reason;
+    string status; // scheduled, completed, cancelled
+    public:
+    Appointment (string t, string d, string rs, string st) 
     {
-        date = d; time = t; doctorName = dn; patientName = pn; reason = rs; status = st;
+        time = t;
+        date = d;
+        reason = rs;
+        status = st;
     }
 
-    // Getter/Setter
-    void setDate(string d) { date = d; }
-    string getDate() { return date; }
-    void setTime(string t) { time = t; }
-    string getTime() { return time; }
-    void setDoctorName(string dn) { doctorName = dn; }
-    string getDoctorName() { return doctorName; }
-    void setPatientName(string pn) { patientName = pn; }
-    string getPatientName() { return patientName; }
-    void setReason(string rs) { reason = rs; }
-    void setStatus(string st) { status = st; }
-    string getStatus() { return status; }
+    void setTime (string t) {time = t; }
+    string getTime () {return time;}
+    void setDate (string d) {date = d;}
+    string getDate () {return date;}
+    void setReason (string rs) {reason = rs;}
+    string getReason () {return reason;}
+    void setStatus (string st) {status = st;}
+    string getStatus () {return status;}
 
-    // Hiển thị thông tin lịch hẹn
-    void displayInfo() {
-        cout << "Appointment Date: " << date << endl;
-        cout << "Appointment Time: " << time << endl;
-        cout << "Doctor Name: " << doctorName << endl;
-        cout << "Patient Name: " << patientName << endl;
+    void cancelAppointment() {
+        status = "Cancelled";
+        cout << "Appointment Cancelled" << endl;
+
+    }
+    void completeAppointment() {
+        status = "Completed";
+        cout << "Appointment Completed" << endl;
+    
+    }
+    void rescheduleAppointment(string newDate, string newTime)
+    {
+        date = newDate;
+        time = newTime;
+        status = "Rescheduled";
+        cout << "Appointment Rescheduled" << endl;
+    }
+    void displayAppointment()
+    {
+        cout << "Time: " << time << endl;
+        cout << "Date: " << date << endl;
         cout << "Reason: " << reason << endl;
-        cout << "Status: " << status << endl;
+    }
+};
+class Dotor 
+{
+    private:
+    string nameDoctor;
+    string specialization;
+    string IDDoctor;
+    public:
+    Dotor (string n, string s, string id)
+    {
+        nameDoctor = n;
+        specialization = s;
+        IDDoctor = id;
+    }
+    void setNameDoctor(string n) { nameDoctor = n; }
+    string getNameDoctor() { return nameDoctor; }
+    void setSpecialization(string s) { specialization = s; }
+    string getSpecialization() { return specialization; }
+    void setIDDoctor(string id) { IDDoctor = id; }
+    string getIDDoctor() { return IDDoctor; }
+    void checkAppointments()
+    {
+        for (int i=0; i< Appointments.size(); i++)
+        {
+            cout << Appointments[i] << endl;
+        }
+    }
+    void updateStatus(Appointment &app, string newStatus)
+    {
+        app.setStatus(newStatus);
+    } 
+    void displayInfo()
+    {
+        cout << "Name: "<< nameDoctor << endl;
+        cout << "Specialization: " << specialization << endl;
+        cout << "ID: " << IDDoctor << endl;
     }
 };
 
-// -------------------- CLASS Patient --------------------
-// Lớp cha quản lý thông tin bệnh nhân
 class Patient {
-protected:
-    string name;                    // Tên bệnh nhân
-    string ID;                      // Mã bệnh nhân
-    int age;                        // Tuổi
-    vector<string> medicalHistory;  // Tiền sử bệnh
-    vector<Appointment> appointments; // Danh sách lịch hẹn
-
-public:
-    // Constructor có tham số
-    Patient(string n, string id, int a, vector<string> mh) {
-        name = n; ID = id; age = a; medicalHistory = mh;
+    protected:
+    string name;
+    int age;
+    string ID;
+    vector<string> medicalHistory;
+    public:
+    Patient(string n, int a, string id, vector<string> mh)
+    {
+        name =n;
+        age = a;
+        ID = id;
+        medicalHistory = mh;
     }
-
-    // Constructor mặc định
-    Patient() { name = ""; ID = ""; age = 0; }
-
-    // Getter/Setter
     void setName(string n) { name = n; }
     string getName() { return name; }
-    void setID(string id) { ID = id; }
-    string getID() { return ID; }
     void setAge(int a) { age = a; }
     int getAge() { return age; }
-
-    // Thêm tiền sử bệnh
-    void addMedicalHistory(string mh) {
-        medicalHistory.push_back(mh);
-        cout << "Medical history added." << endl;
-    }
-
-    // Hiển thị tiền sử bệnh
-    void displayMedicalHistory() {
-        cout << "Medical history of " << name << ":" << endl;
-        for (int i=0; i<medicalHistory.size(); i++) {
-            cout << "- " << medicalHistory[i] << endl;
-        }
-    }
-
-    // Đặt lịch hẹn mới
-    virtual void scheduleAppointment(string date, string time, string doctorName, string reason, string status) {
-        Appointment newAppointment(date, time, doctorName, name, reason, status);
-        appointments.push_back(newAppointment);
-        cout << "Appointment scheduled for " << name << " with Dr. " << doctorName
-             << " on " << date << " at " << time << endl;
-    }
-
-    // Hiển thị toàn bộ lịch hẹn
-    void displayAppointments() {
-        cout << "Appointments for " << name << ":" << endl;
-        for (int i=0; i<appointments.size(); i++) {
-            appointments[i].displayInfo();
-            cout << "------------------" << endl;
-        }
-    }
-
-    // Hiển thị thông tin bệnh nhân
-    void displayInfo() {
-        cout << "Patient Name: " << name << endl;
-        cout << "Patient ID: " << ID << endl;
-        cout << "Age: " << age << endl;
-        displayMedicalHistory();
-        displayAppointments();
-    }
-};
-
-// -------------------- CLASS Doctor --------------------
-// Lớp quản lý thông tin bác sĩ
-class Doctor {
-private:
-    string name;                 // Tên bác sĩ
-    string specialty;            // Chuyên khoa
-    string ID;                   // Mã bác sĩ
-    vector<string> schedule;     // Lịch làm việc
-
-public:
-    Doctor(string n, string sp, string id, vector<string> sch) {
-        name = n; specialty = sp; ID = id; schedule = sch;
-    }
-
-    // Getter/Setter
-    void setName(string n) { name = n; }
-    string getName() { return name; }
-    void setSpecialty(string s) { specialty = s; }
-    string getSpecialty() { return specialty; }
     void setID(string id) { ID = id; }
     string getID() { return ID; }
-
-    // Thêm lịch làm việc
-    void addSchedule(string sch) {
-        schedule.push_back(sch);
-        cout << "Schedule added." << endl;
-    }
-
-    // Hiển thị lịch làm việc
-    void displaySchedule() {
-        cout << "Schedule of Dr. " << name << ":" << endl;
-        for (int i=0; i<schedule.size(); i++) {
-            cout << "- " << schedule[i] << endl;
+    void updateMedicalHistory(string update)
+    {
+        medicalHistory.push_back(update);
+    };
+    void displayMedicalHistory()
+    {
+        for (int i=0; i< medicalHistory.size(); i++)
+        {
+            cout << medicalHistory[i] << endl;
         }
     }
-
-    // Hủy lịch hẹn
-    void cancelAppointment(Appointment &app) { // dùng tham chiếu để thay đổi trạng thái
-        app.setStatus("Cancelled");
-        cout << "Appointment on " << app.getDate() << " at " << app.getTime()
-             << " with Dr. " << name << " has been cancelled." << endl;
+    void scheduleAppointment (string app)
+    {
+        Appointments.push_back(app);
     }
-
-    // Hiển thị thông tin bác sĩ
-    void displayInfo() {
-        cout << "Doctor Name: " << name << endl;
-        cout << "Specialty: " << specialty << endl;
-        cout << "Doctor ID: " << ID << endl;
-        displaySchedule();
+    void displayAppointments()
+    {
+        for (int i=0; i< Appointments.size(); i++)
+        {
+            cout << Appointments[i] << endl;
+        }
     }
+    virtual void displayInfo()
+    {
+        cout << "Name: "<< name << endl;
+        cout << "Age: " << age << endl;
+        cout << "ID: " << ID << endl; 
+    };
 };
 
-// -------------------- CLASS chronic (bệnh nhân mãn tính) --------------------
-class chronic : public Patient {
-private:
-    string condition; // Tình trạng bệnh mãn tính
-public:
-    chronic(string n, string id, int a, vector<string> mh, string c) : Patient(n, id, a, mh) {
+class ChronicPatient : public Patient {
+    private:
+    string condition;
+    public:
+    ChronicPatient(string n, int a, string id, vector<string> mh, string c) : Patient(n, a, id, mh)
+    {
         condition = c;
-        addMedicalHistory(c);
     }
-
     void setCondition(string c) { condition = c; }
     string getCondition() { return condition; }
-
-    void addChronicCondition(string c) {
-        condition = c;
-        cout << "Chronic condition added." << endl;
+    void lastCheckup()
+    {
+        string date;
+        cout << "Enter date of last checkup: "<< endl;
+        cin >> date;
+        cout << "Last checkup date updated to: " << date << endl; 
+    }
+    void displayInfo() override
+    {
+        Patient::displayInfo();
+        cout << "Condition: " << condition << endl;
     }
 
-    void lastCheckupDate(string d) { cout << "Last checkup date: " << d << endl; }
+};
 
-    void displayChronicInfo() {
-        displayInfo();
-        cout << "Chronic Condition: " << condition << endl;
+class Regular : public Patient 
+{
+    private:
+    string lastVisitDate;
+    public:
+    Regular(string n, int a, string id, vector<string> mh, string lvd) : Patient(n, a, id, mh)
+    {
+        lastVisitDate = lvd;
+    }
+    void setLastVisitDate(string lvd) { lastVisitDate = lvd; }
+    string getLastVisitDate() { return lastVisitDate; }
+    void scheduleCheckup()
+    {
+        string date;
+        cout << "Enter date for checkup: "<< endl;
+        cin >> date;
+        lastVisitDate = date;
+        cout << "Checkup scheduled for: " << date << endl; 
+    }
+    void displayInfo() override
+    {
+        Patient::displayInfo();
+        cout << "Last Visit Date: " << lastVisitDate << endl;
     }
 };
 
-// -------------------- CLASS regular (bệnh nhân khám định kỳ) --------------------
-class regular : public Patient {
-private:
-    string requires; // Nhu cầu khám định kỳ
-public:
-    regular(string n, string id, int a, vector<string> mh, string r) : Patient(n, id, a, mh) {
-        requires = r;
-        addMedicalHistory(r);
-    }
+int main()
+{
+    vector<string> mh = {"Flu - 2021", "Allergy - 2022"};
+    ChronicPatient cp("John Doe", 45, "CP123", mh, "Diabetes");
+    cp.displayInfo();
+    cp.lastCheckup();
+    cp.updateMedicalHistory("Blood Test - 2023");
+    cp.displayMedicalHistory();
+    cp.scheduleAppointment("Appointment on 2023-10-10 at 10:00 AM");
+    cp.displayAppointments();
 
-    void setRequires(string r) { requires = r; }
-    string getRequires() { return requires; }
+    Regular rp("Jane Smith", 30, "RP456", mh, "2023-01-15");
+    rp.displayInfo();
+    rp.scheduleCheckup();
+    rp.updateMedicalHistory("Vaccination - 2023");
+    rp.displayMedicalHistory();
+    rp.scheduleAppointment("Appointment on 2023-11-20 at 2:00 PM");
+    rp.displayAppointments();
 
-    void periodicCheckupDate(string d) { cout << "Next periodic checkup date: " << d << endl; }
+    Dotor doc("Dr. Alice", "General Practitioner", "D789");
+    doc.displayInfo();
+    doc.checkAppointments();
 
-    void displayRegularInfo() {
-        displayInfo();
-        cout << "Requires: " << requires << endl;
-    }
-};
-
-// -------------------- MAIN --------------------
-int main() {
-    // Bệnh nhân mãn tính
-    vector<string> mh1 = {"Hypertension"};
-    chronic patient1("John Doe", "P001", 45, mh1, "Diabetes");
-    patient1.displayChronicInfo();
-    patient1.lastCheckupDate("2024-05-01");
-    patient1.scheduleAppointment("2024-06-15", "10:00 AM", "Smith", "Routine Checkup", "Scheduled");
-
-    // Bệnh nhân khám định kỳ
-    vector<string> mh2 = {"Allergy to Penicillin"};
-    regular patient2("Jane Smith", "P002", 30, mh2, "Annual Physical");
-    patient2.displayRegularInfo();
-    patient2.periodicCheckupDate("2024-12-01");
-    patient2.scheduleAppointment("2024-07-20", "02:00 PM", "Brown", "Flu Symptoms", "Scheduled");
-
-    // Bác sĩ 1
-    vector<string> sch1 = {"09:00 AM - 12:00 PM", "01:00 PM - 05:00 PM"};
-    Doctor doctor1("Dr. Smith", "General Practitioner", "D001", sch1);
-    doctor1.displayInfo();
-
-    // Bác sĩ 2
-    vector<string> sch2 = {"10:00 AM - 01:00 PM", "02:00 PM - 06:00 PM"};
-    Doctor doctor2("Dr. Brown", "Pediatrician", "D002", sch2);
-    doctor2.displayInfo();
-
-    // Hiển thị lịch hẹn
-    cout << "\n--- Patient Appointments ---" << endl;
-    patient1.displayAppointments();
-    patient2.displayAppointments();
+    Appointment app("10:00 AM", "2023-10-10", "Routine Checkup", "Scheduled");
+    app.displayAppointment();
+    app.completeAppointment();
+    app.displayAppointment();
 
     return 0;
-}
+
+};
