@@ -1,3 +1,7 @@
+//Student: Nguyen Van
+//ID: 24110146
+//Object: Small Clinic Management System
+//Using LLM to create test case, add comment, and make the programme more better
 #include <iostream>
 #include <string>
 #include <vector>
@@ -248,4 +252,5 @@ int main()
 
     return 0;
 }
+
 
