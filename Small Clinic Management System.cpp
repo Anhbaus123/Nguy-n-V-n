@@ -172,13 +172,13 @@ public:
 // =============================
 // Lớp Doctor (bác sĩ)
 // =============================
-class Dotor // (nên sửa thành Doctor)
+class Doctor // (nên sửa thành Doctor)
 {
 private:
     string name;            // Tên bác sĩ
     string specialization;  // Chuyên khoa
 public:
-    Dotor(string n, string s)
+    Doctor(string n, string s)
     {
         name = n;
         specialization = s;
@@ -225,7 +225,7 @@ int main()
     r.scheduleCheckup();
 
     // Tạo bác sĩ
-    Dotor d("Dr. Smith", "Cardiologist");
+    Doctor d("Dr. Smith", "Cardiologist");
     d.displayInfo();
 
     // Thêm lịch hẹn cho bệnh nhân
@@ -248,3 +248,4 @@ int main()
 
     return 0;
 }
+
